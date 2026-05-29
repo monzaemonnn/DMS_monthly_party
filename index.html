@@ -72,6 +72,19 @@
                     <div class="progress-bar-fill" id="budget-progress-bar" style="width: 0%;"></div>
                 </div>
                 <p class="budget-status-text" id="budget-status-msg">Your basket is empty. Ready to shop!</p>
+
+                <!-- Cost Breakdown Widget -->
+                <div class="cost-breakdown-wrapper">
+                    <button type="button" id="btn-toggle-breakdown" class="breakdown-toggle-btn">
+                        <span>📊 Cost Breakdown by Category</span>
+                        <span class="chevron">▼</span>
+                    </button>
+                    <div id="cost-breakdown-panel" class="cost-breakdown-panel hidden">
+                        <div class="breakdown-list" id="breakdown-list-container">
+                            <!-- Items dynamically generated -->
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <!-- Section 2: Interactive Shopping List & Basket Tracker -->
@@ -128,6 +141,7 @@
                     <button class="dish-filter-btn" data-dish="jello">🧪 Jello Shots</button>
                     <button class="dish-filter-btn" data-dish="crepes">🥞 Crepes</button>
                     <button class="dish-filter-btn" data-dish="fries">🍟 French Fries</button>
+                    <button class="dish-filter-btn" data-dish="cucumber">🥒 Cucumber Sticks</button>
                     <button class="dish-filter-btn" data-dish="drinks">🍹 Drinks</button>
                     <button class="dish-filter-btn" data-dish="decorations">🏮 Decor</button>
                 </div>
@@ -198,120 +212,435 @@
                             <h3>🍢 Yakitori (Sous-Vide & Torch)</h3>
                         </div>
                         <div class="recipe-card-body">
-                            <p class="recipe-concept"><strong>The Method:</strong> Heat pre-cooked frozen skewers in a cooler bag using a Sous-Vide wand, then char with a blowtorch on demand for that smokey grilled texture without a charcoal mess.</p>
-                            <ul>
-                                <li><strong>Sous-Vide:</strong> Set to 65°C (149°F) for 1–2 hours to warm through completely.</li>
-                                <li><strong>Finishing:</strong> Lay on a baking sheet/tray, brush with tare (sauce), and blowtorch for 5–10 seconds per side until bubbled and charred.</li>
-                            </ul>
+                            <p class="recipe-concept"><strong>Method:</strong> Warm frozen skewers in a cooler box with a Sous-Vide wand, then sear with a blowtorch on demand for that charred matsuri finish.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients:</strong>
+                                <ul>
+                                    <li>Frozen pre-cooked Yakitori (50 skewers)</li>
+                                    <li>1 bottle Yakitori Tare (sauce)</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Pre-warm cooler box with water. Set Sous-Vide wand to 65°C.</li>
+                                    <li>Submerge sealed bags of skewers for 1–2 hours to heat through.</li>
+                                    <li>Arrange on baking tray, brush generously with tare.</li>
+                                    <li>Blowtorch for 5–10s per side until bubbly and charred.</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Recipe 2: Hashimaki -->
+                    <!-- Recipe 2: Takoyaki -->
+                    <div class="recipe-card" id="recipe-takoyaki">
+                        <div class="recipe-card-header">
+                            <h3>🐙 Takoyaki (Octopus Balls)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>Method:</strong> Golden crispy batter balls filled with octopus pieces, cooked live on a hotplate well grid.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients (for ~40 balls):</strong>
+                                <ul>
+                                    <li>300g Takoyaki mix flour</li>
+                                    <li>2 eggs & 900ml water</li>
+                                    <li>200g frozen octopus (cut into bite-size)</li>
+                                    <li>Chopped green onions, tempura bits, red ginger</li>
+                                    <li>Takoyaki sauce, Kewpie mayo, aonori, bonito flakes</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Whisk flour, eggs, and water into a thin, smooth batter.</li>
+                                    <li>Oil the takoyaki griddle wells generously and heat up.</li>
+                                    <li>Pour batter to overflow the wells. Drop octopus in each well.</li>
+                                    <li>Scatter green onions, tempura bits (tenkasu), and ginger.</li>
+                                    <li>As the edges set, cut the grid and flip 90° using a pick.</li>
+                                    <li>Flip completely and rotate until golden-brown spheres.</li>
+                                    <li>Serve hot topped with sauce, mayo, aonori, and bonito flakes.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 3: Hashimaki -->
                     <div class="recipe-card" id="recipe-hashimaki">
                         <div class="recipe-card-header">
                             <h3>🥢 Hashimaki (Chopstick Roll)</h3>
                         </div>
                         <div class="recipe-card-body">
-                            <p class="recipe-concept"><strong>The Method:</strong> Savory okonomiyaki batter spread thin, toppings added, then rolled around wooden chopsticks on the flat griddle.</p>
-                            <ul>
-                                <li><strong>Batter:</strong> 100g okonomiyaki flour + 150ml water + 1 egg.</li>
-                                <li><strong>Steps:</strong> Pour batter in a long oval shape. Add tempura bits, red ginger, cheese/pork. When bubbles form, place two chopsticks at one end and roll up carefully.</li>
-                                <li><strong>Sauce:</strong> Drizzle sauce, Kewpie mayo, aonori, and bonito flakes.</li>
-                            </ul>
+                            <p class="recipe-concept"><strong>Method:</strong> Okonomiyaki batter spread thin, loaded with toppings, then rolled around chopsticks live on the griddle.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients:</strong>
+                                <ul>
+                                    <li>100g Okonomiyaki flour mix & 150ml water</li>
+                                    <li>1 egg</li>
+                                    <li>Shredded cabbage, tempura bits, pickled red ginger</li>
+                                    <li>Slices of pork belly or cheese slices (optional)</li>
+                                    <li>Okonomiyaki sauce, Kewpie mayo, aonori, bonito flakes</li>
+                                    <li>Disposable wooden chopsticks (wari-bashi)</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Whisk flour, water, and egg into a smooth batter.</li>
+                                    <li>Heat flat griddle to medium-high and oil lightly.</li>
+                                    <li>Spread a ladle of batter into a thin 15cm oval.</li>
+                                    <li>Scatter cabbage, tempura bits, red ginger, and pork/cheese.</li>
+                                    <li>Place chopsticks at one end and roll up pancake tightly.</li>
+                                    <li>Press seam down to seal and brown. Top with sauces & aonori.</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Recipe 3: Karaage -->
+                    <!-- Recipe 4: Yakisoba -->
+                    <div class="recipe-card" id="recipe-yakisoba">
+                        <div class="recipe-card-header">
+                            <h3>🍝 Yakisoba (Fried Noodles)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>Method:</strong> Classic Japanese fried noodles sautéed with pork belly and cabbage on the flat teppan.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients:</strong>
+                                <ul>
+                                    <li>3 packs Yakisoba noodles</li>
+                                    <li>150g pork belly slices</li>
+                                    <li>Shredded cabbage & chopped green onions</li>
+                                    <li>Yakisoba sauce (bottle)</li>
+                                    <li>Benishoga (pickled ginger) & aonori flakes</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Heat flat hotplate and fry pork slices until browned.</li>
+                                    <li>Add cabbage and sauté until slightly softened.</li>
+                                    <li>Place noodles on top, pour 3 tbsp water to steam-loosen.</li>
+                                    <li>Stir-fry noodles together, then drizzle sauce generously.</li>
+                                    <li>Toss until sauce caramelizes. Top with benishoga and aonori.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 5: Karaage -->
                     <div class="recipe-card" id="recipe-karaage">
                         <div class="recipe-card-header">
                             <h3>🍗 Matsuri Karaage (Double Fry)</h3>
                         </div>
                         <div class="recipe-card-body">
-                            <p class="recipe-concept"><strong>The Method:</strong> Double-fried Brazilian chicken thigh chunks for maximum crunch on the outside and juicy tenderness inside.</p>
-                            <ul>
-                                <li><strong>Marinade (Tonight):</strong> Garlic/ginger paste + soy sauce + sake + pinch of sugar. Cut chicken into 4cm pieces and marinate overnight.</li>
-                                <li><strong>Dredge:</strong> Coat thoroughly in Katakuriko (potato starch) right before frying.</li>
-                                <li><strong>Double Fry:</strong> 1st fry at 160°C (320°F) for 3 mins (rest for 4 mins). 2nd fry at 190°C (375°F) for 1 min until golden brown.</li>
-                            </ul>
+                            <p class="recipe-concept"><strong>Method:</strong> Overnight marinated chicken chunks double-fried for ultimate crunch and juiciness.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients (for 2kg):</strong>
+                                <ul>
+                                    <li>2kg chicken thighs (cut into 4cm pieces)</li>
+                                    <li>3 tbsp garlic paste & 3 tbsp ginger paste</li>
+                                    <li>5 tbsp soy sauce & 3 tbsp sake & 1 tbsp sugar</li>
+                                    <li>1 cup Katakuriko (potato starch)</li>
+                                    <li>Deep-frying vegetable oil</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Marinate chicken in garlic, ginger, soy, sake, sugar overnight.</li>
+                                    <li>Coat chicken thoroughly in Katakuriko starch before frying.</li>
+                                    <li>1st Fry: Heat oil to 160°C. Fry for 3 mins. Drain and rest 4 mins.</li>
+                                    <li>2nd Fry: Heat oil to 190°C. Fry for 1 min until golden brown.</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Recipe 4: Flowing Somen -->
+                    <!-- Recipe 6: Flowing Somen -->
                     <div class="recipe-card" id="recipe-somen">
                         <div class="recipe-card-header">
                             <h3>🌊 Nagashi Somen (Flowing Noodles)</h3>
                         </div>
                         <div class="recipe-card-body">
-                            <p class="recipe-concept"><strong>The Machine:</strong> Circulating tabletop water slide. Keep it cold and flowing!</p>
-                            <ul>
-                                <li><strong>Prep:</strong> Boil somen for exactly 2 minutes. Shock immediately in ice water. Roll into small bite-sized nests.</li>
-                                <li><strong>Running:</strong> Fill machine with cold tap water and a generous amount of ice cubes. Drop noodles in small batches and let guests catch them.</li>
-                                <li><strong>Sauce:</strong> Serve chilled tsuyu in cups with grated ginger and chopped green onions.</li>
-                            </ul>
+                            <p class="recipe-concept"><strong>Method:</strong> Chilled somen noodles sliding down a water track, dipped in cold tsuyu sauce.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients:</strong>
+                                <ul>
+                                    <li>400g dry somen noodles</li>
+                                    <li>1 bottle somen tsuyu (dipping sauce)</li>
+                                    <li>Grated ginger, chopped green onions, sesame seeds</li>
+                                    <li>Ice cubes & cold water for the machine</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Boil somen noodles in rolling water for exactly 2 minutes.</li>
+                                    <li>Rinse under cold running water, rubbing off excess starch.</li>
+                                    <li>Shock in ice water, drain, and roll into small nests.</li>
+                                    <li>Fill somen machine with cold water and ice. Start pump.</li>
+                                    <li>Drop noodle nests in stream; dip in tsuyu with condiments.</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Recipe 5: Kakigori -->
+                    <!-- Recipe 7: Kakigori -->
                     <div class="recipe-card" id="recipe-kakigori">
                         <div class="recipe-card-header">
                             <h3>🍧 Shaved Ice (Kakigori)</h3>
                         </div>
                         <div class="recipe-card-body">
-                            <p class="recipe-concept"><strong>The Machine:</strong> Shaved ice machine. Standard cubes or blocks depending on motor type.</p>
-                            <ul>
-                                <li><strong>Ice:</strong> Freeze special molds tonight, or prepare bag ice from Donki.</li>
-                                <li><strong>Shaving:</strong> Shave fine, snow-like ice into paper bowls. Pat down gently.</li>
-                                <li><strong>Flavors:</strong> Pour syrup (melon/strawberry) and drizzle sweet condensed milk on top.</li>
-                            </ul>
+                            <p class="recipe-concept"><strong>Method:</strong> Fluffy shaved ice drizzled with sweet colorful syrups and condensed milk.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients:</strong>
+                                <ul>
+                                    <li>Ice cubes / ice blocks</li>
+                                    <li>Kakigori syrups (strawberry, melon, blue Hawaii)</li>
+                                    <li>Sweetened condensed milk (squeeze tube)</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Load ice into the shaving machine.</li>
+                                    <li>Shave ice into paper bowls, shaping it gently into a dome.</li>
+                                    <li>Pour syrups in colorful stripes over the shaved ice dome.</li>
+                                    <li>Drizzle condensed milk generously over the top and serve.</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Recipe 6: Jello Shots -->
-                    <div class="recipe-card" id="recipe-jelloshots">
+                    <!-- Recipe 8: Jello Shots -->
+                    <div class="recipe-card" id="recipe-jello">
                         <div class="recipe-card-header">
                             <h3>🧪 Neon Jello Shots (for funsies)</h3>
                         </div>
                         <div class="recipe-card-body">
-                            <p class="recipe-concept"><strong>The Mix:</strong> Colorful neon gelatin shots using sweet juices and vodka.</p>
-                            <ul>
-                                <li><strong>Proportion:</strong> 1 pack gelatin (5g) + 120ml boiling water (dissolve) + 80ml vodka + 50ml bright juice (like Fanta Melon/Grape).</li>
-                                <li><strong>Pour:</strong> Pour into small plastic cups, cover with lids, and chill in the fridge for at least 4 hours.</li>
-                            </ul>
+                            <p class="recipe-concept"><strong>Method:</strong> Sweet, colorful gelatin shots spiked with vodka, set in portion cups.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients:</strong>
+                                <ul>
+                                    <li>2 packs (10g) gelatin powder</li>
+                                    <li>240ml boiling water</li>
+                                    <li>160ml vodka</li>
+                                    <li>100ml neon fruit juice (Fanta Melon/Grape)</li>
+                                    <li>Small plastic portion cups with lids</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Dissolve gelatin powder completely in boiling water.</li>
+                                    <li>Stir in vodka and neon fruit juice.</li>
+                                    <li>Pour mixture into portion cups and cover with lids.</li>
+                                    <li>Place in fridge for at least 4 hours until completely set.</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Recipe 7: Crepes -->
+                    <!-- Recipe 9: Crepes -->
                     <div class="recipe-card" id="recipe-crepes">
                         <div class="recipe-card-header">
                             <h3>🥞 Choco-Banana Crepes (Teppan Style)</h3>
                         </div>
                         <div class="recipe-card-body">
-                            <p class="recipe-concept"><strong>The Method:</strong> Thin, sweet crepes cooked on the flat hotplate, loaded with whipped cream, banana slices, and chocolate syrup.</p>
-                            <ul>
-                                <li><strong>Batter:</strong> 100g flour + 2 eggs + 200ml milk + 15g melted butter + 1 tbsp sugar. Whisk and rest for 30 mins.</li>
-                                <li><strong>Cooking:</strong> Pour a thin layer on a low-medium hotplate, spread quickly. Flip after 1 minute, cook for 30 seconds more.</li>
-                                <li><strong>Toppings:</strong> Cool slightly, fold in half, spray whipped cream, add sliced banana, chocolate syrup, fold into a cone.</li>
-                            </ul>
+                            <p class="recipe-concept"><strong>Method:</strong> Soft, paper-thin sweet crepes cooked on the low-heat hotplate and filled with toppings.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients (for ~6 crepes):</strong>
+                                <ul>
+                                    <li>100g all-purpose flour & 1 tbsp sugar</li>
+                                    <li>2 eggs & 200ml milk</li>
+                                    <li>15g melted butter</li>
+                                    <li>Spray whipped cream can</li>
+                                    <li>2 bananas (sliced) & chocolate syrup bottle</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Whisk flour, sugar, eggs, and milk. Stir in melted butter. Rest 30m.</li>
+                                    <li>Pour batter on a low-medium hotplate and spread very thin.</li>
+                                    <li>Cook 1 min until edges curl, flip, cook 30s. Let cool.</li>
+                                    <li>Fold in half, spray cream, add bananas & choco, fold twice.</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Recipe 8: French Fries -->
+                    <!-- Recipe 10: French Fries -->
                     <div class="recipe-card" id="recipe-fries">
                         <div class="recipe-card-header">
                             <h3>🍟 Nori-Shio French Fries (Deep Fry)</h3>
                         </div>
                         <div class="recipe-card-body">
-                            <p class="recipe-concept"><strong>The Method:</strong> Golden, crispy shoestring French fries seasoned with salt and aonori seaweed flakes.</p>
-                            <ul>
-                                <li><strong>Fry:</strong> Deep fry frozen fries in hot oil (180°C / 350°F) for 4–5 minutes until golden and crisp.</li>
-                                <li><strong>Seasoning:</strong> Drain oil immediately, transfer to a paper bag or bowl, toss generously with fine salt and aonori flakes.</li>
-                            </ul>
+                            <p class="recipe-concept"><strong>Method:</strong> Crispy deep-fried potatoes tossed with fine salt and aonori seaweed flakes.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients:</strong>
+                                <ul>
+                                    <li>1kg frozen French fries</li>
+                                    <li>Deep-frying vegetable oil</li>
+                                    <li>Fine salt & aonori flakes</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Heat frying oil to 180°C.</li>
+                                    <li>Deep fry frozen potatoes for 4–5 minutes until golden.</li>
+                                    <li>Drain immediately and transfer to a paper bag or bowl.</li>
+                                    <li>Sprinkle salt and aonori flakes, shake vigorously to coat.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 11: Cucumber Sticks -->
+                    <div class="recipe-card" id="recipe-cucumber">
+                        <div class="recipe-card-header">
+                            <h3>🥒 Kyuuri no Ippon-zuke (Cucumbers on Sticks)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>Method:</strong> Whole chilled cucumbers lightly shaved, salted, marinated in dashi, and skewered for a refreshing festival snack.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients:</strong>
+                                <ul>
+                                    <li>8-10 Japanese cucumbers (Kyuuri)</li>
+                                    <li>2 tbsp coarse salt (for rubbing)</li>
+                                    <li>2 tsp dashi powder & 1 tsp soy sauce</li>
+                                    <li>300ml water</li>
+                                    <li>Thick bamboo skewers / chopsticks</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Wash cucumbers. Shave thin skin stripes lengthwise using a peeler.</li>
+                                    <li>Rub cucumbers with coarse salt to remove bitterness, rinse.</li>
+                                    <li>Boil water, dissolve dashi powder and soy sauce, then cool down.</li>
+                                    <li>Place cucumbers in a Ziploc bag with cooled dashi brine, refrigerate for 4+ hours.</li>
+                                    <li>Skewer each cucumber lengthwise with a bamboo stick and serve cold.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 12: Lemon Sour & Matsuri Drinks -->
+                    <div class="recipe-card" id="recipe-drinks">
+                        <div class="recipe-card-header">
+                            <h3>🍹 Lemon Sour Bar & Soft Drinks</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>Method:</strong> A self-serve drink station centered around classic Suntory Lemon Sour concentrate and ice-cold soft drinks.</p>
+                            <div class="recipe-lists">
+                                <strong>Ingredients:</strong>
+                                <ul>
+                                    <li>Suntory Lemon Sour Concentrate (1.8L)</li>
+                                    <li>Carbonated water (Soda) & Rock ice bags</li>
+                                    <li>Soft drinks (Coke, Oolong/Green Tea)</li>
+                                    <li>Lemon slices (optional garnish)</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Fill a festival cup to the brim with rock ice.</li>
+                                    <li>Pour 1 part Suntory Lemon Sour Concentrate (approx 45ml).</li>
+                                    <li>Top with 3 parts carbonated soda water (approx 135ml).</li>
+                                    <li>Stir gently once from the bottom to retain carbonation.</li>
+                                    <li>For non-alcoholic options, serve chilled tea or cola over ice.</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 13: Matsuri Decor & Atmosphere -->
+                    <div class="recipe-card" id="recipe-decorations">
+                        <div class="recipe-card-header">
+                            <h3>🏮 Matsuri Atmosphere & Setup</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>Method:</strong> Transform the sharehouse common room/balcony into a vibrant, glowing night market stall alley.</p>
+                            <div class="recipe-lists">
+                                <strong>Setup Items:</strong>
+                                <ul>
+                                    <li>Matsuri paper lanterns & fairy string lights</li>
+                                    <li>Disposable plates, bowls, cups, and chopsticks</li>
+                                    <li>Bluetooth speaker (Japanese festival music playlist)</li>
+                                </ul>
+                                <strong>Steps:</strong>
+                                <ol>
+                                    <li>Hang red and white paper lanterns along the walls and balcony.</li>
+                                    <li>String up fairy lights around the food tables for a warm glow.</li>
+                                    <li>Set up distinct cooking zones for the teppan hotplate, deep fryer, somen machine, and ice shaver.</li>
+                                    <li>Queue up a traditional matsuri playlist (Taiko drum music or Awa Odori).</li>
+                                    <li>Place disposable plates, skewers, and cups in an accessible station.</li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Section 4: Event Timeline & Task Checklist -->
+            <!-- Section 4: Costume Hub & Contest -->
+            <section class="dashboard-section glass-card costume-section" id="costume-hub-panel">
+                <h2><span class="icon">👘</span> Matsuri Costume Hub & Contest</h2>
+                <p class="section-desc">Plan your festival attire, find local sourcing in Fukuoka, and register to compete in our live Sharehouse Costume Contest!</p>
+                
+                <div class="costume-grid">
+                    <!-- Costume Sourcing Guide -->
+                    <div class="costume-info-card">
+                        <h3>🛍️ Fukuoka Sourcing & Rental Guide</h3>
+                        <div class="sourcing-list">
+                            <div class="source-item">
+                                <strong>MEGA Don Quijote Fukushige (5 mins away)</strong>
+                                <p>Best spot to purchase budget Jinbei (casual summer wear), funny blow-up costumes, and traditional festival masks (Kitsune, Hyottoko, Okame). Prices: ~1,500 - 3,500 JPY.</p>
+                            </div>
+                            <div class="source-item">
+                                <strong>Second Street Fukushige / Shimoyamato</strong>
+                                <p>Local second-hand shops. You can often find high-quality vintage Yukata and Obi (belts) in their clothing racks for as low as 500 - 1,000 JPY.</p>
+                            </div>
+                            <div class="source-item">
+                                <strong>Hakata/Tenjin Rental (e.g. Mayu no Yakata)</strong>
+                                <p>If you want the full authentic experience. Premium rentals include high-quality cotton Yukata, obi, geta sandals, and professional dressing help. Prices: ~4,000 - 6,000 JPY.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Costume Ideas -->
+                    <div class="costume-info-card">
+                        <h3>💡 Festival Dress Code Ideas</h3>
+                        <ul class="costume-ideas-list">
+                            <li>
+                                <span class="idea-tag traditional">Traditional</span>
+                                <strong>Jinbei (甚平):</strong> Two-piece matching top and shorts. Very breezy, comfortable, and easy to wear for guys and girls.
+                            </li>
+                            <li>
+                                <span class="idea-tag traditional">Traditional</span>
+                                <strong>Yukata (浴衣):</strong> Casual summer kimono made of cotton. Elegant, beautiful, and the classic matsuri staple.
+                            </li>
+                            <li>
+                                <span class="idea-tag traditional">Traditional</span>
+                                <strong>Happi Coat (法被):</strong> Straight-sleeved coat, usually with "Matsuri" written on the back. Wear it over normal shorts/t-shirt!
+                            </li>
+                            <li>
+                                <span class="idea-tag wacky">Wacky / Fun</span>
+                                <strong>Matsuri Mascot:</strong> Dress up as a Giant Takoyaki, a Chocolate Banana, or a French Fry box!
+                            </li>
+                            <li>
+                                <span class="idea-tag wacky">Wacky / Fun</span>
+                                <strong>Anime Matsuri:</strong> Cosplay as characters from anime festival episodes (Demon Slayer, Ghibli, etc.) or wear traditional masks.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Registration Form -->
+                <div class="costume-registration-container">
+                    <h3>📝 Register Your Costume</h3>
+                    <form id="costume-reg-form" class="costume-reg-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="costume-guest-name">Your Name</label>
+                                <input type="text" id="costume-guest-name" placeholder="e.g., Matthew" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="costume-desc">Costume Description / Character</label>
+                                <input type="text" id="costume-desc" placeholder="e.g., Red Jinbei with Fox Mask" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">Register for Contest</button>
+                    </form>
+                </div>
+
+                <!-- Leaderboard / Voting Contest -->
+                <div class="costume-contest-container">
+                    <h3>🏆 Live Costume Contest Leaderboard</h3>
+                    <p class="contest-help">Tap "Vote" to support your favorite outfit. Live results update instantly!</p>
+                    <div class="leaderboard-list" id="costume-leaderboard">
+                        <!-- Items rendered dynamically by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Event Timeline & Task Checklist -->
             <section class="dashboard-section glass-card timeline-section" id="timeline-panel">
                 <h2><span class="icon">📅</span> Preparation Timeline & Checklist</h2>
                 <p class="section-desc">Follow this schedule to ensure smooth prep and hosting. Tap to check off tasks.</p>

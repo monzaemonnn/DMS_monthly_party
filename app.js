@@ -1,12 +1,17 @@
 // DMS Natsumatsuri Party Planner & Budget Tracker - app.js
 
-// Global State
+// // Global State
 const state = {
     guestCount: 7,
     baseBudget: 30000,
     perGuestContribution: 1000,
     lanternsActive: true,
     activeDishFilter: 'all',
+    guestCostumes: [
+        { id: 'c-1', guestName: 'Matthew', costumeName: 'Retro Jinbei & Kitsune Mask', votes: 2 },
+        { id: 'c-2', guestName: 'Kenji', costumeName: 'DMS Matsuri Happi Coat', votes: 1 },
+        { id: 'c-3', guestName: 'Yuka', costumeName: 'Colorful Summer Yukata', votes: 3 }
+    ],
     shoppingItems: [
         // Gyomu Super Items
         { id: 'g-chix', name: 'Frozen Chicken Thighs (Momo-niku)', desc: '2kg bag for Karaage', estPrice: 1500, actualPrice: 1500, store: 'gyomu', checked: false, tags: ['karaage'] },
@@ -16,7 +21,9 @@ const state = {
         { id: 'g-soba', name: 'Yakisoba Noodles & Sauce', desc: 'Bulk noodle packs + bottle sauce', estPrice: 800, actualPrice: 800, store: 'gyomu', checked: false, tags: ['yakisoba'] },
         { id: 'g-tako', name: 'Takoyaki & Okonomiyaki Flour Mix', desc: 'flour bags for live teppan/crepes cooking', estPrice: 600, actualPrice: 600, store: 'gyomu', checked: false, tags: ['takoyaki', 'hashimaki', 'crepes'] },
         { id: 'g-cond', name: 'Matsuri Condiments', desc: 'Aonori, bonito flakes, Kewpie mayo, pickled ginger', estPrice: 1200, actualPrice: 1200, store: 'gyomu', checked: false, tags: ['takoyaki', 'hashimaki', 'yakisoba'] },
-        { id: 'g-veg', name: 'Vegetables (Cabbage, Negi, Cucumbers)', desc: 'Cabbage for Hashimaki, green onions, cucumbers on sticks', estPrice: 1100, actualPrice: 1100, store: 'gyomu', checked: false, tags: ['hashimaki', 'takoyaki', 'yakisoba', 'somen'] },
+        { id: 'g-cucumber', name: 'Japanese Cucumbers (Kyuuri)', desc: '8-10 fresh cucumbers for Kyuuri no Ippon-zuke', estPrice: 400, actualPrice: 400, store: 'gyomu', checked: false, tags: ['cucumber'] },
+        { id: 'g-cabbage', name: 'Cabbage (Kyabetsu)', desc: '2 whole cabbages, shredded for Hashimaki & Yakisoba', estPrice: 400, actualPrice: 400, store: 'gyomu', checked: false, tags: ['hashimaki', 'yakisoba'] },
+        { id: 'g-negi', name: 'Green Onions (Negi)', desc: '3-4 stalks for Takoyaki topping & Somen condiments', estPrice: 300, actualPrice: 300, store: 'gyomu', checked: false, tags: ['takoyaki', 'somen'] },
         { id: 'g-somen', name: 'Dry Somen Noodles', desc: 'Bulk somen pack for Nagashi Somen machine', estPrice: 400, actualPrice: 400, store: 'gyomu', checked: false, tags: ['somen'] },
         { id: 'g-tsuyu', name: 'Somen Dipping Sauce (Tsuyu)', desc: 'Large bottle mentsuyu', estPrice: 300, actualPrice: 300, store: 'gyomu', checked: false, tags: ['somen'] },
         { id: 'g-soda', name: 'Carbonated Water (Soda)', desc: '3-4 bottles of 1.5L for Lemon Sours', estPrice: 600, actualPrice: 600, store: 'gyomu', checked: false, tags: ['drinks'] },
@@ -38,7 +45,7 @@ const state = {
         { id: 'd-jello', name: 'Gelatin & Sweet Neon Juices', desc: 'Fanta Melon & Grape for shot colors', estPrice: 800, actualPrice: 800, store: 'donki', checked: false, tags: ['jello'] },
         { id: 'd-syrup', name: 'Kakigori Syrups & Condensed Milk', desc: 'Strawberry/melon syrups + milk squeeze tube', estPrice: 1000, actualPrice: 1000, store: 'donki', checked: false, tags: ['kakigori'] },
         { id: 'd-ice', name: 'Lock Ice Bags', desc: 'Bags of rock ice for Kakigori and drinks', estPrice: 800, actualPrice: 800, store: 'donki', checked: false, tags: ['kakigori', 'drinks'] },
-        { id: 'd-disp', name: 'Disposable Plates, Bowls, Cups, Chopsticks', desc: 'Bamboo skewers for cucumbers, chopsticks for Hashimaki rolling', estPrice: 1200, actualPrice: 1200, store: 'donki', checked: false, tags: ['decorations'] },
+        { id: 'd-disp', name: 'Disposable Plates, Bowls, Cups, Chopsticks', desc: 'Bamboo skewers for cucumbers, chopsticks for Hashimaki rolling', estPrice: 1200, actualPrice: 1200, store: 'donki', checked: false, tags: ['decorations', 'cucumber', 'hashimaki', 'yakitori'] },
         { id: 'd-cups', name: 'Small Plastic Portion Jello Cups', desc: 'Shot cups with lids to set in fridge', estPrice: 500, actualPrice: 500, store: 'donki', checked: false, tags: ['jello'] },
         { id: 'd-dec', name: 'Matsuri Paper Lanterns & Lights', desc: 'Festive red/white lanterns & string lighting', estPrice: 3000, actualPrice: 3000, store: 'donki', checked: false, tags: ['decorations'] }
     ]
@@ -80,7 +87,9 @@ function init() {
     loadState();
     setupEventListeners();
     renderShoppingLists();
+    filterRecipes();
     updateBudgetCalculations();
+    renderCostumes();
     startCountdown();
     generateLanterns();
     setupFireworksInterval();
@@ -204,9 +213,52 @@ function setupEventListeners() {
             
             state.activeDishFilter = e.target.dataset.dish;
             renderShoppingLists();
+            filterRecipes();
             saveState();
         });
     });
+
+    // Toggle Cost Breakdown Panel
+    const btnToggleBreakdown = document.getElementById('btn-toggle-breakdown');
+    const breakdownPanel = document.getElementById('cost-breakdown-panel');
+    if (btnToggleBreakdown && breakdownPanel) {
+        btnToggleBreakdown.addEventListener('click', () => {
+            breakdownPanel.classList.toggle('hidden');
+            const chevron = btnToggleBreakdown.querySelector('.chevron');
+            if (breakdownPanel.classList.contains('hidden')) {
+                chevron.textContent = '▼';
+            } else {
+                chevron.textContent = '▲';
+            }
+        });
+    }
+
+    // Costume Registration Form Submission
+    const costumeForm = document.getElementById('costume-reg-form');
+    if (costumeForm) {
+        costumeForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const guestName = document.getElementById('costume-guest-name').value.trim();
+            const costumeDesc = document.getElementById('costume-desc').value.trim();
+            if (!guestName || !costumeDesc) return;
+
+            const newCostume = {
+                id: `costume-${Date.now()}`,
+                guestName: guestName,
+                costumeName: costumeDesc,
+                votes: 0
+            };
+
+            state.guestCostumes.push(newCostume);
+            renderCostumes();
+            saveState();
+            costumeForm.reset();
+            
+            // Celebration bursts!
+            createFireworkBurst();
+            setTimeout(createFireworkBurst, 200);
+        });
+    }
 }
 
 // Update Budget Calculations
@@ -250,6 +302,7 @@ function updateBudgetCalculations() {
     }
 
     elements.budgetProgressBar.style.width = `${progressPercent}%`;
+    updateCostBreakdown();
 }
 
 // Render Shopping Lists by Store
@@ -479,7 +532,8 @@ function saveState() {
         guestCount: state.guestCount,
         shoppingItems: state.shoppingItems,
         lanternsActive: state.lanternsActive,
-        activeDishFilter: state.activeDishFilter
+        activeDishFilter: state.activeDishFilter,
+        guestCostumes: state.guestCostumes
     }));
 }
 
@@ -492,6 +546,7 @@ function loadState() {
             state.shoppingItems = parsed.shoppingItems ?? state.shoppingItems;
             state.lanternsActive = parsed.lanternsActive ?? true;
             state.activeDishFilter = parsed.activeDishFilter ?? 'all';
+            state.guestCostumes = parsed.guestCostumes ?? state.guestCostumes;
             
             // Sync UI values
             elements.guestInput.value = state.guestCount;
@@ -508,10 +563,147 @@ function loadState() {
                     btn.classList.remove('active');
                 }
             });
+            
+            filterRecipes();
+            renderCostumes();
         } catch (e) {
             console.error("Failed to load saved state", e);
         }
     }
+}
+
+// Filter recipes in Section 3 based on active dish filter
+function filterRecipes() {
+    const filter = state.activeDishFilter;
+    const cards = document.querySelectorAll('.recipe-card');
+    cards.forEach(card => {
+        if (filter === 'all' || card.id === `recipe-${filter}`) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// Render Costume Leaderboard
+function renderCostumes() {
+    const container = document.getElementById('costume-leaderboard');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    // Sort costumes by votes descending
+    const sorted = [...state.guestCostumes].sort((a, b) => b.votes - a.votes);
+    const maxVotes = sorted.length > 0 ? Math.max(...sorted.map(c => c.votes)) : 0;
+    
+    sorted.forEach((c, index) => {
+        const row = document.createElement('div');
+        const isLeading = maxVotes > 0 && c.votes === maxVotes;
+        row.className = `leaderboard-row ${isLeading ? 'leading' : ''}`;
+        
+        // Calculate percentage of votes for the bar
+        const totalVotes = state.guestCostumes.reduce((sum, item) => sum + item.votes, 0);
+        const percent = totalVotes > 0 ? (c.votes / totalVotes) * 100 : 0;
+        
+        row.innerHTML = `
+            <div class="leaderboard-rank">${index + 1}</div>
+            <div class="leaderboard-info">
+                <div class="leaderboard-guest">${c.guestName}</div>
+                <div class="leaderboard-costume">${c.costumeName}</div>
+                <div class="leaderboard-bar-container">
+                    <div class="leaderboard-bar-fill" style="width: ${percent}%; background: ${isLeading ? 'var(--color-matsuri-gold)' : 'var(--color-text-muted)'}"></div>
+                </div>
+            </div>
+            <div class="leaderboard-votes-control">
+                <span class="vote-count">${c.votes} ${c.votes === 1 ? 'vote' : 'votes'}</span>
+                <button type="button" class="vote-btn" data-id="${c.id}">🗳️ Vote</button>
+            </div>
+        `;
+        
+        row.querySelector('.vote-btn').addEventListener('click', () => {
+            c.votes++;
+            renderCostumes();
+            saveState();
+            
+            // Firework burst for fun!
+            createFireworkBurst();
+        });
+        
+        container.appendChild(row);
+    });
+}
+
+// Calculate and Render Cost Breakdown by Category
+function updateCostBreakdown() {
+    const categories = {
+        yakitori: { name: '🍢 Yakitori', color: '#ff7043' },
+        takoyaki: { name: '🐙 Takoyaki', color: '#ec407a' },
+        hashimaki: { name: '🥢 Hashimaki', color: '#ab47bc' },
+        yakisoba: { name: '🍝 Yakisoba', color: '#7e57c2' },
+        karaage: { name: '🍗 Karaage', color: '#ffa726' },
+        somen: { name: '🌊 Somen', color: '#29b6f6' },
+        kakigori: { name: '🍧 Kakigori', color: '#26a69a' },
+        jello: { name: '🧪 Jello Shots', color: '#66bb6a' },
+        crepes: { name: '🥞 Crepes', color: '#ffca28' },
+        fries: { name: '🍟 French Fries', color: '#d4e157' },
+        cucumber: { name: '🥒 Cucumbers', color: '#9ccc65' },
+        drinks: { name: '🍹 Drinks', color: '#26c6da' },
+        decorations: { name: '🏮 Decor', color: '#ef5350' },
+        other: { name: '📦 Other', color: '#8d6e63' }
+    };
+
+    const breakdown = {};
+    Object.keys(categories).forEach(key => {
+        breakdown[key] = { spent: 0, planned: 0 };
+    });
+
+    state.shoppingItems.forEach(item => {
+        const itemTags = item.tags && item.tags.length > 0 ? item.tags : ['other'];
+        const numTags = itemTags.length;
+        
+        itemTags.forEach(tag => {
+            const tagKey = categories[tag] ? tag : 'other';
+            const propPlanned = item.actualPrice / numTags;
+            breakdown[tagKey].planned += propPlanned;
+            
+            if (item.checked) {
+                const propSpent = item.actualPrice / numTags;
+                breakdown[tagKey].spent += propSpent;
+            }
+        });
+    });
+
+    const container = document.getElementById('breakdown-list-container');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const sortedTags = Object.keys(categories).sort((a, b) => breakdown[b].planned - breakdown[a].planned);
+    const maxPlanned = Math.max(...Object.keys(categories).map(k => breakdown[k].planned), 1);
+
+    sortedTags.forEach(tag => {
+        const data = breakdown[tag];
+        const info = categories[tag];
+        if (data.planned === 0 && data.spent === 0) return;
+
+        const row = document.createElement('div');
+        row.className = 'breakdown-row';
+        
+        const spentPercent = (data.spent / maxPlanned) * 100;
+        const plannedPercent = ((data.planned - data.spent) / maxPlanned) * 100;
+
+        row.innerHTML = `
+            <span class="breakdown-label">${info.name}</span>
+            <div class="breakdown-bar-bg">
+                <div class="breakdown-bar-fill spent" style="width: ${spentPercent}%; background: ${info.color}"></div>
+                <div class="breakdown-bar-fill planned" style="width: ${plannedPercent}%; background: ${info.color}80"></div>
+            </div>
+            <div class="breakdown-price">
+                <span class="spent-text">${Math.round(data.spent).toLocaleString()}</span>
+                <span class="sep">/</span>
+                <span class="planned-text">${Math.round(data.planned).toLocaleString()} 円</span>
+            </div>
+        `;
+        container.appendChild(row);
+    });
 }
 
 // Start Application on load
