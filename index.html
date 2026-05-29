@@ -565,37 +565,53 @@
                 <p class="section-desc">Follow this schedule to ensure smooth prep and hosting. Tap to check off tasks.</p>
                 
                 <div class="timeline-container">
-                    <!-- Friday Night -->
+                    <!-- Friday Afternoon (Completed) -->
                     <div class="timeline-step">
-                        <div class="timeline-marker"></div>
+                        <div class="timeline-marker" style="border-color: #4caf50; box-shadow: 0 0 8px #4caf50;"></div>
                         <div class="timeline-content">
-                            <h4>Friday Night (Tonight)</h4>
+                            <h4 style="color: #4caf50;">Friday Afternoon (Completed Shopping)</h4>
                             <ul class="timeline-checkbox-list">
                                 <li>
-                                    <input type="checkbox" id="check-fry1">
-                                    <label for="check-fry1">Cut 2kg chicken thighs and marinate in ginger, garlic, soy sauce, sake</label>
+                                    <input type="checkbox" id="check-sat1" checked disabled>
+                                    <label for="check-sat1" style="text-decoration: line-through; opacity: 0.7;">Go to Fukushige area (Gyomu Super -> A-Price -> Donki)</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="check-fry2">
-                                    <label for="check-fry2">Prepare ice molds (if any) or clear freezer space for Donki ice bags</label>
+                                    <input type="checkbox" id="check-sat2" checked disabled>
+                                    <label for="check-sat2" style="text-decoration: line-through; opacity: 0.7;">Input actual prices into this web app to keep budget on track</label>
                                 </li>
                             </ul>
                         </div>
                     </div>
 
-                    <!-- Saturday Afternoon -->
+                    <!-- Friday Night (Tonight) -->
                     <div class="timeline-step">
                         <div class="timeline-marker"></div>
                         <div class="timeline-content">
-                            <h4>Saturday 2:00 PM (Shopping Run)</h4>
+                            <h4>Friday Night (Tonight's Prep)</h4>
                             <ul class="timeline-checkbox-list">
                                 <li>
-                                    <input type="checkbox" id="check-sat1">
-                                    <label for="check-sat1">Go to Fukushige area (Gyomu Super -> A-Price -> Donki)</label>
+                                    <input type="checkbox" id="check-fry1">
+                                    <label for="check-fry1">Cut 2kg chicken thighs and marinate in ginger, garlic, soy sauce, sake (overnight)</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="check-sat2">
-                                    <label for="check-sat2">Input actual prices into this web app to keep budget on track</label>
+                                    <input type="checkbox" id="check-fry-jello">
+                                    <label for="check-fry-jello">Mix Vodka gelatin shots and place in fridge to set overnight</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-fry-crepe">
+                                    <label for="check-fry-crepe">Mix Crepe batter (flour, eggs, milk, sugar, melted butter) and rest in fridge overnight</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-fry-cucumber">
+                                    <label for="check-fry-cucumber">Prep Cucumbers (Kyuuri): shave, salt, skewer, and place in Ziploc with dashi brine to marinate overnight</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-fry-veg">
+                                    <label for="check-fry-veg">Shred cabbage for Hashimaki/Yakisoba and slice green onions, storing in airtight containers in the fridge</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-fry-ice">
+                                    <label for="check-fry-ice">Store MEGA Donki rock ice bags in sharehouse freezer and clear freezer space</label>
                                 </li>
                             </ul>
                         </div>
@@ -609,23 +625,15 @@
                             <ul class="timeline-checkbox-list">
                                 <li>
                                     <input type="checkbox" id="check-sat3">
-                                    <label for="check-sat3">Boil Somen noodles, shock in ice water, make noodle nest plates</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="check-sat4">
-                                    <label for="check-sat4">Prep veggies (cabbage shreds, negi slice, cucumber skewers in salt/dashi)</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="check-sat5">
-                                    <label for="check-sat5">Mix Vodka gelatin shots and place in fridge to set</label>
+                                    <label for="check-sat3">Boil Somen noodles, shock in ice water, make noodle nest plates, and keep chilled</label>
                                 </li>
                                 <li>
                                     <input type="checkbox" id="check-sat6">
-                                    <label for="check-sat6">Fill cooler box with hot water, insert Sous-Vide wand at 65°C, throw in frozen yakitori box bags</label>
+                                    <label for="check-sat6">Fill cooler box with hot water, insert Sous-Vide wand at 65°C, submerge yakitori bags</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="check-crepe-prep">
-                                    <label for="check-crepe-prep">Mix Crepe batter (flour, eggs, milk, sugar, melted butter) and rest in fridge</label>
+                                    <input type="checkbox" id="check-sat-tables">
+                                    <label for="check-sat-tables">Set up cooking tables: clean and plug in teppan griddles, deep fryer, and tabletop Somen machine</label>
                                 </li>
                             </ul>
                         </div>
@@ -642,8 +650,8 @@
                                     <label for="check-sat7">Dredge marinated chicken in Katakuriko starch, perform 1st fry (160°C)</label>
                                 </li>
                                 <li>
-                                    <input type="checkbox" id="check-sat8">
-                                    <label for="check-sat8">Set up Nagashi Somen machine, clean hotplates on the main table</label>
+                                    <input type="checkbox" id="check-sat-ice-shave">
+                                    <label for="check-sat-ice-shave">Arrange Kakigori ice shaving machine and setup colorful syrups line</label>
                                 </li>
                             </ul>
                         </div>
@@ -657,7 +665,7 @@
                             <ul class="timeline-checkbox-list">
                                 <li>
                                     <input type="checkbox" id="check-sat9">
-                                    <label for="check-sat9">Guests arrive: pour Lemon Sours, start Nagashi Somen</label>
+                                    <label for="check-sat9">Guests arrive: pour Lemon Sours, start Nagashi Somen machine</label>
                                 </li>
                                 <li>
                                     <input type="checkbox" id="check-sat10">
@@ -673,7 +681,7 @@
                                 </li>
                                 <li>
                                     <input type="checkbox" id="check-sat-crepes">
-                                    <label for="check-sat-crepes">Spread crepe batter on hotplate, cook, and serve with sweet toppings on demand</label>
+                                    <label for="check-sat-crepes">Spread crepe batter on griddle teppan, cook, and serve with banana, cream, and chocolate syrup on demand</label>
                                 </li>
                             </ul>
                         </div>
