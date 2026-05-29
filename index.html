@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DMS Early Natsu Matsuri - Party Planner & Budget Tracker</title>
+    <meta name="description" content="Plan, shop, and budget for the DMS Sharehouse Summer Festival Party. Features interactive basket pricing, prep timelines, and matsuri recipes.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Noto+Sans+JP:wght@300;400;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Lantern & Fireworks Background -->
+    <div class="lantern-container" id="lanterns"></div>
+    <div class="fireworks-container" id="fireworks"></div>
+
+    <!-- Floating UI Controls -->
+    <div class="floating-controls">
+        <button type="button" id="btn-toggle-lanterns" class="floating-btn" title="Toggle Floating Lanterns">🏮</button>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="matsuri-badge">祭</div>
+            <h1 id="main-title">DMS Early 夏祭り</h1>
+            <p class="subtitle">Sharehouse Summer Festival Party Planner</p>
+            <div class="countdown-card" id="countdown-timer">
+                <span class="countdown-label">Festival Starts In:</span>
+                <span id="countdown-val" class="countdown-val">Calculating...</span>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <main class="dashboard-grid">
+            
+            <!-- Section 1: Guest Count & Budget Summary -->
+            <section class="dashboard-section glass-card budget-summary-section" id="budget-summary-panel">
+                <h2><span class="icon">💴</span> Budget Control Panel</h2>
+                <div class="control-group">
+                    <label for="guest-count-input">Number of Expected Guests:</label>
+                    <div class="input-stepper">
+                        <button type="button" id="btn-guest-dec" class="stepper-btn">−</button>
+                        <input type="number" id="guest-count-input" value="7" min="0" max="100">
+                        <button type="button" id="btn-guest-inc" class="stepper-btn">+</button>
+                    </div>
+                    <span class="helper-text">Budget rule: 30,000 JPY base + 1,000 JPY per guest</span>
+                </div>
+
+                <!-- Budget Readouts -->
+                <div class="budget-readouts">
+                    <div class="readout-card">
+                        <span class="readout-label">Total Budget</span>
+                        <span class="readout-value" id="budget-total">37,000 JPY</span>
+                    </div>
+                    <div class="readout-card highlight-spent">
+                        <span class="readout-label">Spent (In Basket)</span>
+                        <span class="readout-value" id="budget-spent">0 JPY</span>
+                    </div>
+                    <div class="readout-card highlight-remaining">
+                        <span class="readout-label">Remaining</span>
+                        <span class="readout-value positive" id="budget-remaining">37,000 JPY</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar-fill" id="budget-progress-bar" style="width: 0%;"></div>
+                </div>
+                <p class="budget-status-text" id="budget-status-msg">Your basket is empty. Ready to shop!</p>
+            </section>
+
+            <!-- Section 2: Interactive Shopping List & Basket Tracker -->
+            <section class="dashboard-section glass-card shopping-section" id="shopping-list-panel">
+                <h2><span class="icon">🛒</span> Fukushige Shopping List & Basket Tracker</h2>
+                <p class="section-desc">Tap checkboxes as you add items to your physical cart. Type the actual shelf price in the input field to update your budget in real time.</p>
+                
+                <p class="basket-help-text">💡 <strong>How the basket works:</strong> All items start unchecked (0 JPY spent). Checking them off marks them as "in your physical basket", adding their actual price to your spent total and updating your remaining budget.</p>
+
+                <!-- Add Custom Item Expandable Form -->
+                <div class="add-item-container">
+                    <button type="button" id="btn-toggle-add-form" class="action-btn">➕ Add Custom Item</button>
+                    <form id="add-item-form" class="add-item-form hidden">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="new-item-name">Item Name</label>
+                                <input type="text" id="new-item-name" placeholder="e.g., Premium Beef Slices" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-item-desc">Qty / Description</label>
+                                <input type="text" id="new-item-desc" placeholder="e.g., 500g pack">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="new-item-price">Est. Price (JPY)</label>
+                                <input type="number" id="new-item-price" placeholder="1000" min="0" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-item-store">Store</label>
+                                <select id="new-item-store">
+                                    <option value="gyomu">Gyomu Super</option>
+                                    <option value="aprice">A-Price</option>
+                                    <option value="donki">MEGA Donki</option>
+                                    <option value="other">Other Store</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="submit-btn">Add to List</button>
+                    </form>
+                </div>
+
+                <!-- Dish Filters -->
+                <div class="dish-filters-label">🔍 Filter Shopping Checklist by Dish/Category:</div>
+                <div class="dish-filters" id="dish-filters-container">
+                    <button class="dish-filter-btn active" data-dish="all">All Items</button>
+                    <button class="dish-filter-btn" data-dish="yakitori">🍢 Yakitori</button>
+                    <button class="dish-filter-btn" data-dish="takoyaki">🐙 Takoyaki</button>
+                    <button class="dish-filter-btn" data-dish="hashimaki">🥢 Hashimaki</button>
+                    <button class="dish-filter-btn" data-dish="yakisoba">🍝 Yakisoba</button>
+                    <button class="dish-filter-btn" data-dish="karaage">🍗 Karaage</button>
+                    <button class="dish-filter-btn" data-dish="somen">🌊 Somen</button>
+                    <button class="dish-filter-btn" data-dish="kakigori">🍧 Kakigori</button>
+                    <button class="dish-filter-btn" data-dish="jello">🧪 Jello Shots</button>
+                    <button class="dish-filter-btn" data-dish="crepes">🥞 Crepes</button>
+                    <button class="dish-filter-btn" data-dish="fries">🍟 French Fries</button>
+                    <button class="dish-filter-btn" data-dish="drinks">🍹 Drinks</button>
+                    <button class="dish-filter-btn" data-dish="decorations">🏮 Decor</button>
+                </div>
+
+                <!-- Store Tabs -->
+                <div class="store-tabs">
+                    <button class="tab-btn active" data-store="gyomu" id="tab-btn-gyomu">Gyomu Super</button>
+                    <button class="tab-btn" data-store="aprice" id="tab-btn-aprice">A-Price</button>
+                    <button class="tab-btn" data-store="donki" id="tab-btn-donki">MEGA Donki</button>
+                    <button class="tab-btn" data-store="other" id="tab-btn-other">Other Store</button>
+                </div>
+
+                <!-- Store Lists -->
+                <div class="store-lists-container">
+                    <!-- Gyomu Super List -->
+                    <div class="store-list-pane active" id="list-gyomu">
+                        <div class="store-info-header">
+                            <h3>業務スーパー 福重店 (Jurokucho 1-3-6)</h3>
+                            <span class="badge">Bulk & Condiments</span>
+                        </div>
+                        <ul class="shopping-item-list" id="gyomu-items">
+                            <!-- Items inserted dynamically by JS -->
+                        </ul>
+                    </div>
+
+                    <!-- A-Price List -->
+                    <div class="store-list-pane" id="list-aprice">
+                        <div class="store-info-header">
+                            <h3>A-プライス 西福岡店 (Fukushige 4-19-4)</h3>
+                            <span class="badge premium">Professional Grade</span>
+                        </div>
+                        <ul class="shopping-item-list" id="aprice-items">
+                            <!-- Items inserted dynamically by JS -->
+                        </ul>
+                    </div>
+
+                    <!-- Don Quijote List -->
+                    <div class="store-list-pane" id="list-donki">
+                        <div class="store-info-header">
+                            <h3>MEGAドン・キホーテ 福岡福重店</h3>
+                            <span class="badge donki">Alcohol & Fun</span>
+                        </div>
+                        <ul class="shopping-item-list" id="donki-items">
+                            <!-- Items inserted dynamically by JS -->
+                        </ul>
+                    </div>
+
+                    <!-- Other Store List -->
+                    <div class="store-list-pane" id="list-other">
+                        <div class="store-info-header">
+                            <h3>Other Store / Miscellaneous</h3>
+                            <span class="badge other">Local Shops</span>
+                        </div>
+                        <ul class="shopping-item-list" id="other-items">
+                            <!-- Items inserted dynamically by JS -->
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Recipes & Machine Prep Guides -->
+            <section class="dashboard-section glass-card recipes-section" id="recipes-panel">
+                <h2><span class="icon">🏮</span> Matsuri Food & Machine Prep Guides</h2>
+                <div class="recipe-grid">
+                    <!-- Recipe 1: Yakitori -->
+                    <div class="recipe-card" id="recipe-yakitori">
+                        <div class="recipe-card-header">
+                            <h3>🍢 Yakitori (Sous-Vide & Torch)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>The Method:</strong> Heat pre-cooked frozen skewers in a cooler bag using a Sous-Vide wand, then char with a blowtorch on demand for that smokey grilled texture without a charcoal mess.</p>
+                            <ul>
+                                <li><strong>Sous-Vide:</strong> Set to 65°C (149°F) for 1–2 hours to warm through completely.</li>
+                                <li><strong>Finishing:</strong> Lay on a baking sheet/tray, brush with tare (sauce), and blowtorch for 5–10 seconds per side until bubbled and charred.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 2: Hashimaki -->
+                    <div class="recipe-card" id="recipe-hashimaki">
+                        <div class="recipe-card-header">
+                            <h3>🥢 Hashimaki (Chopstick Roll)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>The Method:</strong> Savory okonomiyaki batter spread thin, toppings added, then rolled around wooden chopsticks on the flat griddle.</p>
+                            <ul>
+                                <li><strong>Batter:</strong> 100g okonomiyaki flour + 150ml water + 1 egg.</li>
+                                <li><strong>Steps:</strong> Pour batter in a long oval shape. Add tempura bits, red ginger, cheese/pork. When bubbles form, place two chopsticks at one end and roll up carefully.</li>
+                                <li><strong>Sauce:</strong> Drizzle sauce, Kewpie mayo, aonori, and bonito flakes.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 3: Karaage -->
+                    <div class="recipe-card" id="recipe-karaage">
+                        <div class="recipe-card-header">
+                            <h3>🍗 Matsuri Karaage (Double Fry)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>The Method:</strong> Double-fried Brazilian chicken thigh chunks for maximum crunch on the outside and juicy tenderness inside.</p>
+                            <ul>
+                                <li><strong>Marinade (Tonight):</strong> Garlic/ginger paste + soy sauce + sake + pinch of sugar. Cut chicken into 4cm pieces and marinate overnight.</li>
+                                <li><strong>Dredge:</strong> Coat thoroughly in Katakuriko (potato starch) right before frying.</li>
+                                <li><strong>Double Fry:</strong> 1st fry at 160°C (320°F) for 3 mins (rest for 4 mins). 2nd fry at 190°C (375°F) for 1 min until golden brown.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 4: Flowing Somen -->
+                    <div class="recipe-card" id="recipe-somen">
+                        <div class="recipe-card-header">
+                            <h3>🌊 Nagashi Somen (Flowing Noodles)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>The Machine:</strong> Circulating tabletop water slide. Keep it cold and flowing!</p>
+                            <ul>
+                                <li><strong>Prep:</strong> Boil somen for exactly 2 minutes. Shock immediately in ice water. Roll into small bite-sized nests.</li>
+                                <li><strong>Running:</strong> Fill machine with cold tap water and a generous amount of ice cubes. Drop noodles in small batches and let guests catch them.</li>
+                                <li><strong>Sauce:</strong> Serve chilled tsuyu in cups with grated ginger and chopped green onions.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 5: Kakigori -->
+                    <div class="recipe-card" id="recipe-kakigori">
+                        <div class="recipe-card-header">
+                            <h3>🍧 Shaved Ice (Kakigori)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>The Machine:</strong> Shaved ice machine. Standard cubes or blocks depending on motor type.</p>
+                            <ul>
+                                <li><strong>Ice:</strong> Freeze special molds tonight, or prepare bag ice from Donki.</li>
+                                <li><strong>Shaving:</strong> Shave fine, snow-like ice into paper bowls. Pat down gently.</li>
+                                <li><strong>Flavors:</strong> Pour syrup (melon/strawberry) and drizzle sweet condensed milk on top.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 6: Jello Shots -->
+                    <div class="recipe-card" id="recipe-jelloshots">
+                        <div class="recipe-card-header">
+                            <h3>🧪 Neon Jello Shots (for funsies)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>The Mix:</strong> Colorful neon gelatin shots using sweet juices and vodka.</p>
+                            <ul>
+                                <li><strong>Proportion:</strong> 1 pack gelatin (5g) + 120ml boiling water (dissolve) + 80ml vodka + 50ml bright juice (like Fanta Melon/Grape).</li>
+                                <li><strong>Pour:</strong> Pour into small plastic cups, cover with lids, and chill in the fridge for at least 4 hours.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 7: Crepes -->
+                    <div class="recipe-card" id="recipe-crepes">
+                        <div class="recipe-card-header">
+                            <h3>🥞 Choco-Banana Crepes (Teppan Style)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>The Method:</strong> Thin, sweet crepes cooked on the flat hotplate, loaded with whipped cream, banana slices, and chocolate syrup.</p>
+                            <ul>
+                                <li><strong>Batter:</strong> 100g flour + 2 eggs + 200ml milk + 15g melted butter + 1 tbsp sugar. Whisk and rest for 30 mins.</li>
+                                <li><strong>Cooking:</strong> Pour a thin layer on a low-medium hotplate, spread quickly. Flip after 1 minute, cook for 30 seconds more.</li>
+                                <li><strong>Toppings:</strong> Cool slightly, fold in half, spray whipped cream, add sliced banana, chocolate syrup, fold into a cone.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Recipe 8: French Fries -->
+                    <div class="recipe-card" id="recipe-fries">
+                        <div class="recipe-card-header">
+                            <h3>🍟 Nori-Shio French Fries (Deep Fry)</h3>
+                        </div>
+                        <div class="recipe-card-body">
+                            <p class="recipe-concept"><strong>The Method:</strong> Golden, crispy shoestring French fries seasoned with salt and aonori seaweed flakes.</p>
+                            <ul>
+                                <li><strong>Fry:</strong> Deep fry frozen fries in hot oil (180°C / 350°F) for 4–5 minutes until golden and crisp.</li>
+                                <li><strong>Seasoning:</strong> Drain oil immediately, transfer to a paper bag or bowl, toss generously with fine salt and aonori flakes.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Event Timeline & Task Checklist -->
+            <section class="dashboard-section glass-card timeline-section" id="timeline-panel">
+                <h2><span class="icon">📅</span> Preparation Timeline & Checklist</h2>
+                <p class="section-desc">Follow this schedule to ensure smooth prep and hosting. Tap to check off tasks.</p>
+                
+                <div class="timeline-container">
+                    <!-- Friday Night -->
+                    <div class="timeline-step">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Friday Night (Tonight)</h4>
+                            <ul class="timeline-checkbox-list">
+                                <li>
+                                    <input type="checkbox" id="check-fry1">
+                                    <label for="check-fry1">Cut 2kg chicken thighs and marinate in ginger, garlic, soy sauce, sake</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-fry2">
+                                    <label for="check-fry2">Prepare ice molds (if any) or clear freezer space for Donki ice bags</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Saturday Afternoon -->
+                    <div class="timeline-step">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Saturday 2:00 PM (Shopping Run)</h4>
+                            <ul class="timeline-checkbox-list">
+                                <li>
+                                    <input type="checkbox" id="check-sat1">
+                                    <label for="check-sat1">Go to Fukushige area (Gyomu Super -> A-Price -> Donki)</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-sat2">
+                                    <label for="check-sat2">Input actual prices into this web app to keep budget on track</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Saturday Pre-Party -->
+                    <div class="timeline-step">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Saturday 5:00 PM (Kitchen Prep)</h4>
+                            <ul class="timeline-checkbox-list">
+                                <li>
+                                    <input type="checkbox" id="check-sat3">
+                                    <label for="check-sat3">Boil Somen noodles, shock in ice water, make noodle nest plates</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-sat4">
+                                    <label for="check-sat4">Prep veggies (cabbage shreds, negi slice, cucumber skewers in salt/dashi)</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-sat5">
+                                    <label for="check-sat5">Mix Vodka gelatin shots and place in fridge to set</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-sat6">
+                                    <label for="check-sat6">Fill cooler box with hot water, insert Sous-Vide wand at 65°C, throw in frozen yakitori box bags</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-crepe-prep">
+                                    <label for="check-crepe-prep">Mix Crepe batter (flour, eggs, milk, sugar, melted butter) and rest in fridge</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Saturday Party Start -->
+                    <div class="timeline-step">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Saturday 6:30 PM (Final Cook)</h4>
+                            <ul class="timeline-checkbox-list">
+                                <li>
+                                    <input type="checkbox" id="check-sat7">
+                                    <label for="check-sat7">Dredge marinated chicken in Katakuriko starch, perform 1st fry (160°C)</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-sat8">
+                                    <label for="check-sat8">Set up Nagashi Somen machine, clean hotplates on the main table</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Saturday Party Live -->
+                    <div class="timeline-step">
+                        <div class="timeline-marker"></div>
+                        <div class="timeline-content">
+                            <h4>Saturday 7:00 PM (Party Time!)</h4>
+                            <ul class="timeline-checkbox-list">
+                                <li>
+                                    <input type="checkbox" id="check-sat9">
+                                    <label for="check-sat9">Guests arrive: pour Lemon Sours, start Nagashi Somen</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-sat10">
+                                    <label for="check-sat10">2nd fry Karaage (190°C) for crispy serving, make Hashimaki and Takoyaki live</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-sat11">
+                                    <label for="check-sat11">Pull yakitori from sous-vide, brush with tare, and torch live!</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-sat-fries">
+                                    <label for="check-sat-fries">Deep fry French Fries and toss with salt & aonori seaweed flakes</label>
+                                </li>
+                                <li>
+                                    <input type="checkbox" id="check-sat-crepes">
+                                    <label for="check-sat-crepes">Spread crepe batter on hotplate, cook, and serve with sweet toppings on demand</label>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>DMS Sharehouse, 1-22-18 Shimoyamato, Nishi-ku, Fukuoka City</p>
+            <p class="copyright">Enjoy the Summer Vibe! 🍧🏮🎇</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
