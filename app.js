@@ -14,7 +14,7 @@ const state = {
         { id: 'g-dry', name: 'Dry Ingredients (Katakuriko & Garlic/Ginger Paste)', desc: 'Potato starch & tubes for Karaage', estPrice: 400, actualPrice: 400, store: 'gyomu', checked: false, tags: ['karaage'] },
         { id: 'g-yaki', name: 'Frozen Yakitori Momo Skewers', desc: '50-skewers box, precooked', estPrice: 1500, actualPrice: 1500, store: 'gyomu', checked: false, tags: ['yakitori'] },
         { id: 'g-soba', name: 'Yakisoba Noodles & Sauce', desc: 'Bulk noodle packs + bottle sauce', estPrice: 800, actualPrice: 800, store: 'gyomu', checked: false, tags: ['yakisoba'] },
-        { id: 'g-tako', name: 'Takoyaki & Okonomiyaki Flour Mix', desc: 'flour bags for live teppan/crepes cooking', estPrice: 600, actualPrice: 600, store: 'gyomu', checked: false, tags: ['takoyaki', 'hashimaki', 'crepes'] },
+        { id: 'g-tako', name: 'Takoyaki & Okonomiyaki Flour Mix', desc: 'flour bags for live teppan cooking', estPrice: 600, actualPrice: 600, store: 'gyomu', checked: false, tags: ['takoyaki', 'hashimaki'] },
         { id: 'g-cond', name: 'Matsuri Condiments', desc: 'Aonori, bonito flakes, Kewpie mayo, pickled ginger', estPrice: 1200, actualPrice: 1200, store: 'gyomu', checked: false, tags: ['takoyaki', 'hashimaki', 'yakisoba'] },
         { id: 'g-cucumber', name: 'Japanese Cucumbers (Kyuuri)', desc: '8-10 fresh cucumbers for Kyuuri no Ippon-zuke', estPrice: 400, actualPrice: 400, store: 'gyomu', checked: false, tags: ['cucumber'] },
         { id: 'g-cabbage', name: 'Cabbage (Kyabetsu)', desc: '2 whole cabbages, shredded for Hashimaki & Yakisoba', estPrice: 400, actualPrice: 400, store: 'gyomu', checked: false, tags: ['hashimaki', 'yakisoba'] },
@@ -26,7 +26,8 @@ const state = {
         { id: 'g-fries', name: 'Frozen French Fries (1kg)', desc: 'Shoestring or wedge cut bag', estPrice: 300, actualPrice: 300, store: 'gyomu', checked: false, tags: ['fries'] },
         { id: 'g-crepe-whip', name: 'Whipped Cream Spray', desc: 'Can of whipped cream for crepe filling', estPrice: 400, actualPrice: 400, store: 'gyomu', checked: false, tags: ['crepes'] },
         { id: 'g-crepe-topping', name: 'Crepe Fillings (Bananas & Choco Syrup)', desc: 'Fresh bananas + chocolate squeeze bottle', estPrice: 500, actualPrice: 500, store: 'gyomu', checked: false, tags: ['crepes'] },
-        { id: 'g-crepe-milk', name: 'Milk & Butter', desc: 'Liquid ingredients for crepe batter', estPrice: 400, actualPrice: 400, store: 'gyomu', checked: false, tags: ['crepes'] },
+        { id: 'g-pancake-mix', name: 'Pancake Mix (Hotcake Mix)', desc: '150g-200g pack for Crepes (Delish Kitchen recipe)', estPrice: 300, actualPrice: 300, store: 'gyomu', checked: false, tags: ['crepes'] },
+        { id: 'g-crepe-milk', name: 'Milk & Eggs (Crepes)', desc: 'Milk (200ml) & 1 Egg for crepe batter', estPrice: 300, actualPrice: 300, store: 'gyomu', checked: false, tags: ['crepes'] },
 
         // A-Price Items
         { id: 'a-oct', name: 'Frozen Octopus Cuts (Takobutsu)', desc: 'Large commercial pack for Takoyaki', estPrice: 1800, actualPrice: 1800, store: 'aprice', checked: false, tags: ['takoyaki'] },
