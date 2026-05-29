@@ -1,17 +1,12 @@
 // DMS Natsumatsuri Party Planner & Budget Tracker - app.js
 
-// // Global State
+// Global State
 const state = {
     guestCount: 7,
     baseBudget: 30000,
     perGuestContribution: 1000,
     lanternsActive: true,
     activeDishFilter: 'all',
-    guestCostumes: [
-        { id: 'c-1', guestName: 'Matthew', costumeName: 'Retro Jinbei & Kitsune Mask', votes: 2 },
-        { id: 'c-2', guestName: 'Kenji', costumeName: 'DMS Matsuri Happi Coat', votes: 1 },
-        { id: 'c-3', guestName: 'Yuka', costumeName: 'Colorful Summer Yukata', votes: 3 }
-    ],
     shoppingItems: [
         // Gyomu Super Items
         { id: 'g-chix', name: 'Frozen Chicken Thighs (Momo-niku)', desc: '2kg bag for Karaage', estPrice: 1500, actualPrice: 1500, store: 'gyomu', checked: false, tags: ['karaage'] },
@@ -89,7 +84,6 @@ function init() {
     renderShoppingLists();
     filterRecipes();
     updateBudgetCalculations();
-    renderCostumes();
     startCountdown();
     generateLanterns();
     setupFireworksInterval();
@@ -233,32 +227,6 @@ function setupEventListeners() {
         });
     }
 
-    // Costume Registration Form Submission
-    const costumeForm = document.getElementById('costume-reg-form');
-    if (costumeForm) {
-        costumeForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const guestName = document.getElementById('costume-guest-name').value.trim();
-            const costumeDesc = document.getElementById('costume-desc').value.trim();
-            if (!guestName || !costumeDesc) return;
-
-            const newCostume = {
-                id: `costume-${Date.now()}`,
-                guestName: guestName,
-                costumeName: costumeDesc,
-                votes: 0
-            };
-
-            state.guestCostumes.push(newCostume);
-            renderCostumes();
-            saveState();
-            costumeForm.reset();
-            
-            // Celebration bursts!
-            createFireworkBurst();
-            setTimeout(createFireworkBurst, 200);
-        });
-    }
 }
 
 // Update Budget Calculations
@@ -532,8 +500,7 @@ function saveState() {
         guestCount: state.guestCount,
         shoppingItems: state.shoppingItems,
         lanternsActive: state.lanternsActive,
-        activeDishFilter: state.activeDishFilter,
-        guestCostumes: state.guestCostumes
+        activeDishFilter: state.activeDishFilter
     }));
 }
 
@@ -543,10 +510,35 @@ function loadState() {
         try {
             const parsed = JSON.parse(saved);
             state.guestCount = parsed.guestCount ?? 7;
-            state.shoppingItems = parsed.shoppingItems ?? state.shoppingItems;
             state.lanternsActive = parsed.lanternsActive ?? true;
             state.activeDishFilter = parsed.activeDishFilter ?? 'all';
-            state.guestCostumes = parsed.guestCostumes ?? state.guestCostumes;
+            
+            // Merge loaded items with default items to prevent missing updates
+            if (parsed.shoppingItems) {
+                const savedItemsMap = new Map(parsed.shoppingItems.map(item => [item.id, item]));
+                
+                // 1. Keep all default items, updating their checked & actualPrice if they exist in saved state
+                const mergedItems = state.shoppingItems.map(defaultItem => {
+                    const savedItem = savedItemsMap.get(defaultItem.id);
+                    if (savedItem) {
+                        return {
+                            ...defaultItem,
+                            checked: savedItem.checked,
+                            actualPrice: savedItem.actualPrice
+                        };
+                    }
+                    return defaultItem;
+                });
+                
+                // 2. Add any custom items that were created by the user (IDs starting with 'custom-')
+                parsed.shoppingItems.forEach(savedItem => {
+                    if (savedItem && savedItem.id && savedItem.id.startsWith('custom-')) {
+                        mergedItems.push(savedItem);
+                    }
+                });
+                
+                state.shoppingItems = mergedItems;
+            }
             
             // Sync UI values
             elements.guestInput.value = state.guestCount;
@@ -565,7 +557,6 @@ function loadState() {
             });
             
             filterRecipes();
-            renderCostumes();
         } catch (e) {
             console.error("Failed to load saved state", e);
         }
@@ -582,53 +573,6 @@ function filterRecipes() {
         } else {
             card.style.display = 'none';
         }
-    });
-}
-
-// Render Costume Leaderboard
-function renderCostumes() {
-    const container = document.getElementById('costume-leaderboard');
-    if (!container) return;
-    container.innerHTML = '';
-    
-    // Sort costumes by votes descending
-    const sorted = [...state.guestCostumes].sort((a, b) => b.votes - a.votes);
-    const maxVotes = sorted.length > 0 ? Math.max(...sorted.map(c => c.votes)) : 0;
-    
-    sorted.forEach((c, index) => {
-        const row = document.createElement('div');
-        const isLeading = maxVotes > 0 && c.votes === maxVotes;
-        row.className = `leaderboard-row ${isLeading ? 'leading' : ''}`;
-        
-        // Calculate percentage of votes for the bar
-        const totalVotes = state.guestCostumes.reduce((sum, item) => sum + item.votes, 0);
-        const percent = totalVotes > 0 ? (c.votes / totalVotes) * 100 : 0;
-        
-        row.innerHTML = `
-            <div class="leaderboard-rank">${index + 1}</div>
-            <div class="leaderboard-info">
-                <div class="leaderboard-guest">${c.guestName}</div>
-                <div class="leaderboard-costume">${c.costumeName}</div>
-                <div class="leaderboard-bar-container">
-                    <div class="leaderboard-bar-fill" style="width: ${percent}%; background: ${isLeading ? 'var(--color-matsuri-gold)' : 'var(--color-text-muted)'}"></div>
-                </div>
-            </div>
-            <div class="leaderboard-votes-control">
-                <span class="vote-count">${c.votes} ${c.votes === 1 ? 'vote' : 'votes'}</span>
-                <button type="button" class="vote-btn" data-id="${c.id}">🗳️ Vote</button>
-            </div>
-        `;
-        
-        row.querySelector('.vote-btn').addEventListener('click', () => {
-            c.votes++;
-            renderCostumes();
-            saveState();
-            
-            // Firework burst for fun!
-            createFireworkBurst();
-        });
-        
-        container.appendChild(row);
     });
 }
 
